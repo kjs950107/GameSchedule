@@ -50,6 +50,9 @@ namespace GameHomework.Core
         public Dictionary<string, DateTime> Completions { get; set; } = new();
 
         public WidgetSettings Widget { get; set; } = new();
+
+        /// <summary>처음 실행 안내를 보여 줬는지. null = 이 기능 전부터 쓰던 데이터 (안내 안 함)</summary>
+        public bool? WelcomeShown { get; set; }
     }
 
     public class Game

@@ -790,6 +790,17 @@ namespace CoreTests
             Check("가져온 주기는 미완료 (체크 기록 없음)", !recv.Completions.Keys.Any(k => k.StartsWith(rHsr.Tasks[0].Id.ToString())) && !ResetCalculator.IsDone(rHsr.Tasks[0], rHsr, null, later));
             Eq("주기 다시 가져오면 이미 있음", ImportState.Duplicate, ShareCodec.State(ShareCodec.Items(pkgC)[0], rHsr, recv, later));
 
+            Console.WriteLine("[처음 실행 안내]");
+            Check("새로 설치 → 안내 한 번", DefaultData.Create().WelcomeShown == false);
+            var wdir = Path.Combine(Path.GetTempPath(), "gh-welcome-" + Guid.NewGuid());
+            var wstore = new DataStore(wdir);
+            Check("처음 실행 (파일 없음) → 안내 띄움", wstore.Load().WelcomeShown == false);
+            var wd2 = wstore.Load(); wd2.WelcomeShown = true; wstore.Save(wd2);
+            Check("보여 준 뒤엔 다시 안 띄움", wstore.Load().WelcomeShown == true);
+            File.WriteAllText(wstore.FilePath, "{\"Games\":[]}");
+            Check("예전부터 쓰던 데이터(값 없음) → 안 띄움", wstore.Load().WelcomeShown == true);
+            Directory.Delete(wdir, true);
+
             Console.WriteLine();
             Console.WriteLine($"결과: {_pass} 통과, {_fail} 실패");
             return _fail == 0 ? 0 : 1;

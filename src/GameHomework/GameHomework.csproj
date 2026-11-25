@@ -12,7 +12,7 @@
     <AssemblyName>GameHomework</AssemblyName>
     <RootNamespace>GameHomework</RootNamespace>
     <Product>게임 숙제 관리</Product>
-    <Version>1.11.0</Version>
+    <Version>1.12.0</Version>
     <ApplicationIcon>app.ico</ApplicationIcon>
   </PropertyGroup>
 

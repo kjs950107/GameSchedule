@@ -8,7 +8,7 @@ namespace GameHomework.Core
     {
         public static AppData Create()
         {
-            var data = new AppData();
+            var data = new AppData { WelcomeShown = false }; // 새로 설치 → 처음 실행 안내 한 번
 
             // ---- 모바일 게임 ----
             // 초기화 시각: 조사로 확인된 것은 그 시각(한국 시간), 확인 못 한 것은 04:00

@@ -107,6 +107,8 @@ namespace GameHomework
 
         private static void Save() => AppState.Save();
 
+        private void Guide_Click(object sender, RoutedEventArgs e) => App.OpenGuide();
+
         private static bool Confirm(string message) =>
             MessageBox.Show(message, "확인", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
 

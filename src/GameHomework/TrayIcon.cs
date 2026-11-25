@@ -62,6 +62,7 @@ namespace GameHomework
             menu.Items.Add(_topmostMenu);
             menu.Items.Add(new Forms.ToolStripSeparator());
             menu.Items.Add(settingsItem);
+            menu.Items.Add(new Forms.ToolStripMenuItem("사용법 (웹)", null, (s, e) => App.OpenGuide()));
             menu.Items.Add(eventItem);
             menu.Items.Add(cycleItem);
             menu.Items.Add(pickupItem);

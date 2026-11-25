@@ -71,6 +71,7 @@ namespace GameHomework.Core
             data.Games ??= new();
             data.Events ??= new();
             data.Pickups ??= new();
+            data.WelcomeShown ??= true;   // 예전부터 쓰던 데이터면 안내 안 띄움
             data.Completions ??= new();
             data.Widget ??= new WidgetSettings();
             data.Widget.Placements ??= new();

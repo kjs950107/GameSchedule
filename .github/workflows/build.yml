@@ -58,6 +58,8 @@ jobs:
             publish/GameHomework.exe
             publish/GameHomework.exe.sha256
           body: |
+            처음 쓰신다면 → [사용법](${{ github.server_url }}/${{ github.repository }}/blob/main/docs/GUIDE.md)
+
             이 exe는 GitHub Actions가 이 저장소의 공개 소스(${{ github.sha }})로 직접 빌드했습니다.
             빌드 기록: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 

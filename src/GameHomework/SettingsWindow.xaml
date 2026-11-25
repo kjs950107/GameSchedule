@@ -31,6 +31,7 @@
         </Style>
     </Window.Resources>
 
+    <Grid>
     <TabControl x:Name="Tabs" Margin="8" SelectionChanged="Tabs_SelectionChanged">
 
         <!-- ===================== 게임 / 숙제 ===================== -->
@@ -469,4 +470,8 @@
             </ScrollViewer>
         </TabItem>
     </TabControl>
+    <!-- 탭 줄 오른쪽 끝: 사용법 -->
+    <Button Content="사용법" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,14,0"
+            Padding="10,2" ToolTip="사용 설명서를 브라우저로 열어요" Click="Guide_Click"/>
+    </Grid>
 </Window>

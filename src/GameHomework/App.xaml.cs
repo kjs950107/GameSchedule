@@ -73,6 +73,14 @@ namespace GameHomework
 
             _tray = new TrayIcon();
 
+            // 처음 설치했을 때 한 번만: 사용법 위치 안내
+            if (AppState.Data.WelcomeShown == false)
+            {
+                AppState.Data.WelcomeShown = true;
+                AppState.SaveSilently();
+                Dispatcher.BeginInvoke(new Action(ShowWelcome), DispatcherPriority.ApplicationIdle);
+            }
+
             // 끝난 이벤트 / 완료 후 초기화가 지난 무기한 목표를 1분마다 삭제
             _purgeTimer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(1) };
             _purgeTimer.Tick += (s, ev) =>
@@ -134,6 +142,31 @@ namespace GameHomework
             {
                 LogError("주기 컨텐츠 창", ex);
             }
+        }
+
+        /// <summary>사용 설명서 (GitHub 문서)</summary>
+        public const string GuideUrl = "https://github.com/kjs950107/GameSchedule/blob/main/docs/GUIDE.md";
+
+        public static void OpenGuide()
+        {
+            try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(GuideUrl) { UseShellExecute = true }); }
+            catch (Exception ex)
+            {
+                LogError("사용법 열기", ex);
+                MessageBox.Show("브라우저를 열지 못했습니다. 아래 주소로 들어가 주세요.\n\n" + GuideUrl, "사용법",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private static void ShowWelcome()
+        {
+            MessageBox.Show(
+                "게임 숙제 관리를 설치해 주셔서 고마워요!\n\n" +
+                "· 바탕화면 오른쪽 위에 숙제 위젯이 떠 있어요.\n" +
+                "· 작업표시줄 오른쪽 아래 트레이 아이콘으로 메뉴를 열 수 있어요.\n\n" +
+                "사용법은 설정(위젯의 ⚙ 버튼) 오른쪽 위의 [사용법] 버튼에서 볼 수 있어요.\n" +
+                "(이 안내는 처음 한 번만 나와요)",
+                "게임 숙제 관리", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         /// <summary>뭔가 들어 있는 칸이고, 켜 둔 상태인지</summary>
