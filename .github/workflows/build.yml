@@ -1,0 +1,68 @@
+# 공개된 소스로 GitHub가 직접 빌드합니다.
+# - main에 올릴 때마다: 테스트 + 빌드 확인 (exe는 Actions 탭 → 실행 기록 → Artifacts에서 받을 수 있음)
+# - v로 시작하는 태그(예: v1.11.0)를 올리면: Releases에 exe + SHA-256 해시를 자동으로 올림
+name: build
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Logic tests
+        run: dotnet run --project tests/CoreTests/CoreTests.csproj -c Release
+
+      - name: Publish (self-contained single exe, no .NET install needed)
+        run: >
+          dotnet publish src/GameHomework/GameHomework.csproj -c Release -r win-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true
+          -o publish
+
+      - name: SHA-256
+        shell: pwsh
+        run: |
+          $h = (Get-FileHash publish/GameHomework.exe -Algorithm SHA256).Hash.ToLower()
+          "$h  GameHomework.exe" | Out-File -Encoding ascii publish/GameHomework.exe.sha256
+          "EXE_SHA256=$h" | Out-File -Append -Encoding utf8 $env:GITHUB_ENV
+          Write-Host "SHA-256: $h"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GameHomework-win-x64
+          path: |
+            publish/GameHomework.exe
+            publish/GameHomework.exe.sha256
+
+      - name: Release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            publish/GameHomework.exe
+            publish/GameHomework.exe.sha256
+          body: |
+            이 exe는 GitHub Actions가 이 저장소의 공개 소스(${{ github.sha }})로 직접 빌드했습니다.
+            빌드 기록: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            **SHA-256**: `${{ env.EXE_SHA256 }}`
+            (PowerShell에서 `Get-FileHash GameHomework.exe` 로 같은 값인지 확인할 수 있어요)
+
+            처음 실행할 때 "Windows의 PC 보호" 창이 뜨면 **추가 정보 → 실행**을 누르세요.
+            (코드 서명을 하지 않은 개인 배포 프로그램이라 뜨는 경고예요)

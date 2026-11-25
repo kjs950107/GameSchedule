@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- 초기화 계산 로직 검증용 콘솔 테스트 (WPF 없이 어느 OS에서나 실행 가능) -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\src\GameHomework\Core\*.cs" Link="Core\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>
